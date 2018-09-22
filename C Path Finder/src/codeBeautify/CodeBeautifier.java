@@ -19,6 +19,7 @@ public class CodeBeautifier {
 		 */
 		lines = CommentRemover.removeComments(lines);
 		lines = BlankLineRemover.removeBlankLines(lines);
+		
 		CustomFileWriter.writeAFile(currentFile, lines);
 		
 		/**

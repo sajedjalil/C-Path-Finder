@@ -19,7 +19,8 @@ public class CommentRemover {
 		
 		for(int line=0; line<fileText.size(); line++) {
 			
-			String s = fileText.get(line);
+			//if(line == 114) System.out.println(fileText.get(line)+" "+doubleQuoteFlag);
+ 			String s = fileText.get(line);
 			
 			for(int i=0; i<s.length()-1; i++) {
 				
@@ -43,7 +44,7 @@ public class CommentRemover {
 						multipleLineCommentFlag = 0;
 						s = s.replace( s.substring(multipleCommentLineStart, i+2), " ");
 						//temp.add( s );
-						
+						i = 0;
 						//multipleCommentLines += (line-multipleCommentLineStart+1);
 					}
 				}
@@ -59,6 +60,8 @@ public class CommentRemover {
 				//temp.add( s );
 				multipleCommentLineStart = 0;
 			}
+			
+			if( s.length() > 0 && (int)s.charAt( s.length()-1 ) == 34 ) doubleQuoteFlag = (doubleQuoteFlag+1)%2; 
 			
 			temp.add(s);
 		}
