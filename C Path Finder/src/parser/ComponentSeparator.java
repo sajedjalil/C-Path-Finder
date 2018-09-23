@@ -127,12 +127,75 @@ public class ComponentSeparator {
 		
 	}
 	
+	private Boolean ifConditionalPreprocessor(int lineNumber) {
+		
+		String specialConcerned [] = {"#if", "#ifdef", "#ifndef"};
+		
+		String firstTerm = "";
+		if( save.get(lineNumber)[0].length() == 1 ) firstTerm = save.get(lineNumber)[0] + save.get(lineNumber)[1];
+		else firstTerm = save.get(lineNumber)[0];
+		
+		for(int i=0; i<specialConcerned.length; i++) {
 
+			if(firstTerm.equals(specialConcerned[i])) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	private Boolean ifEndConditionalPreprocessor(int lineNumber) {
+		
+		String specialConcerned = "#endif";
+		
+		String firstTerm = "";
+		if( save.get(lineNumber)[0].length() == 1 ) firstTerm = save.get(lineNumber)[0] + save.get(lineNumber)[1];
+		else firstTerm = save.get(lineNumber)[0];
+		
+		if(firstTerm.equals(specialConcerned)) return true;
+		
+		return false;
+	}
+	
+	private int getConditionalPreprocessorRange(int lineNumber) {
+		
+		int conditionLevelCounter = 0; 
+		
+		while( lineNumber < save.size() ) {
+
+			if( save.get(lineNumber)[0].startsWith("#") ) {
+				
+				if( ifConditionalPreprocessor(lineNumber) == true ) {
+					conditionLevelCounter++;
+				}
+				else if( ifEndConditionalPreprocessor(lineNumber) == true ) {
+					conditionLevelCounter--;
+					
+					if(conditionLevelCounter == 0) {
+						return lineNumber;
+					}
+				}
+			}
+			
+			
+			lineNumber++;
+		}
+		
+		return lineNumber;
+	}
 	
 	private int preprocessorRange(int lineNumber) {
 		
-		int counter = 0;
+		// if it contains #if #ifdef #ifndif
+		if(ifConditionalPreprocessor(lineNumber) == true) {
+			//System.out.println(lineNumber);
+			return getConditionalPreprocessorRange(lineNumber) - lineNumber;
+		}
 		
+		
+		//others - #include #define #pragma #error
+		int counter = 0;
 		
 		while( save.get(lineNumber)[ save.get(lineNumber).length -1 ] .endsWith("\\") ) {
 			lineNumber++;

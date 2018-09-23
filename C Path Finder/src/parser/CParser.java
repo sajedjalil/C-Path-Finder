@@ -9,7 +9,7 @@ public class CParser {
 
 	public CParser() {
 		
-		ArrayList<String> lines = CustomFileReader.readAfile(new File("E:\\Results\\factor.c"));
+		ArrayList<String> lines = CustomFileReader.readAfile(new File("E:\\Results\\chon.c"));
 
 		new ComponentSeparator(lines);
 	}
