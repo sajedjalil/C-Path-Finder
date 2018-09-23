@@ -1,4 +1,4 @@
-package codeBeautify;
+package beautifyCode;
 
 import java.util.ArrayList;
 
@@ -9,7 +9,9 @@ public static ArrayList<String> removeBlankLines( ArrayList<String> fileText){
 		ArrayList<String> temp = new ArrayList<String>();
 		
 		for(String s: fileText) {
-			if( s.trim().length() > 0 ) temp.add(s);
+			if( s.trim().length() > 0 ) {
+				temp.add(s);
+			}
 		}
 		
 		return temp;

@@ -58,7 +58,7 @@ public class InputFileCopyMachine {
 				
 				
 			}
-			else if( a.isFile() && a.getName().endsWith(".c")) {
+			else if( a.isFile() && (a.getName().endsWith(".c") || a.getName().endsWith(".h")) ) {
 				
 				try {
 					Files.copy(s, d, StandardCopyOption.REPLACE_EXISTING );

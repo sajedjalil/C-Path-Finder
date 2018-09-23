@@ -1,7 +1,10 @@
-package codeBeautify;
+package beautifyCode;
 
 import java.io.File;
 import java.util.ArrayList;
+
+import inputFileLoader.CustomFileReader;
+import inputFileLoader.CustomFileWriter;
 
 public class CodeBeautifier {
 
