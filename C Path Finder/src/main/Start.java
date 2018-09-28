@@ -2,7 +2,7 @@ package main;
 
 import java.io.File;
 
-import beautifyCode.CodeBeautifier;
+import inputCodeBeautifier.CodeBeautifier;
 import inputFileLoader.InputFileCopyMachine;
 
 public class Start {
