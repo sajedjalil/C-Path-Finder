@@ -26,7 +26,7 @@ public class CommentRemover {
 				
 				if( multipleLineCommentFlag==0 && doubleQuoteFlag==0 ) {
 					
-					if( s.charAt(i) == '/' && s.charAt(i+1)=='/') {
+					if( s.charAt(i) == '/' && s.charAt(i+1)=='/') {  //remove single line comments
 						s = s.replace( s.substring(i), " ");
 						//temp.add( s );
 						break;

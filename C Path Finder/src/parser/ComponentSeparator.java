@@ -2,45 +2,60 @@ package parser;
 
 import java.util.ArrayList;
 
+
+import parser.components.*;
+
 public class ComponentSeparator {
 	
-	private ArrayList<String[]> save = new ArrayList<String[]>();
-	private ArrayList<String> lines;
+	private ArrayList<String[]> save = new ArrayList<String[]>(); // as word
+	private ArrayList<String> lines; // line string
 	
-	public ComponentSeparator( ArrayList<String> lines) {
+	//private ObjectFile tempObjectFile = null;
+	
+	
+	
+	public ComponentSeparator( ObjectFile currentFile ) {
 		
-		preSave(lines);
+		//tempObjectFile = currentFile;
 		
-		getComponent();
+		preSave( currentFile.fileData );
+
 	}
 	
 	
-	private void getComponent() {
+	
+	public void getComponent( ObjectFile currentFile ) {
 		
 		for(int i=0; i<save.size(); i++) {
 			
 			if( checkifPreprocessor(i) == true ) {
 				
 				int k = preprocessorRange(i);
-				System.out.println("Preprocessor: "+ (i+1) +  " " + (i+k+1) );
+				
+				currentFile.directives.add( new Directive(i, i+k+1) );
+				//System.out.println("Preprocessor: "+ (i+1) +  " " + (i+k+1) );
 				i += k;
 			}
 			else if( checkifMethod(i) == true ){
 				
 				
 				int k = getMethodRange(i);
-				System.out.println("Methods: " + (i+1) +  " " + (i+k+1) );
-				i+=k;
+				
+				currentFile.methods.add( new Method( i, i+k+1, lines.subList(i, i+k+1) ) );
+				//System.out.println("Methods: " + (i+1) +  " " + (i+k+1) );
+				i+= k;
 				
 			}
 			else {
 				
 				int k = getOtherRange(i);
-				System.out.println("Others: "+(i+1) + " " + (k+i+1));
+				currentFile.userDefinedData.add( new UserDefinedData(i, i+k+1) );
+				//System.out.println("Others: "+(i+1) + " " + (k+i+1));
 				i+=k;
 			}
 			
 		}
+
 		
 	}
 	

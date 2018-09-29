@@ -22,7 +22,7 @@ public class Start {
 	private void init() {
 		long startTime = System.nanoTime();
 		/** */
-		new InputFileCopyMachine("E:\\Datasets", "E:\\Results");
+		new InputFileCopyMachine("E:\\Datasets\\test", "E:\\Results\\test");
 		
 		long endTime   = System.nanoTime();
 		System.out.println(endTime-startTime);
