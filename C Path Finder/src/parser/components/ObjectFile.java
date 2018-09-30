@@ -46,6 +46,8 @@ public class ObjectFile {
 		for(Method m: methods) {
 			
 			new MethodParser(m);
+			
+			//System.out.println(m.parameters.size());
 		}
 	}
 

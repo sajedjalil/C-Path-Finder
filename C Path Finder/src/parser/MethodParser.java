@@ -1,6 +1,7 @@
 package parser;
 
 import parser.components.Method;
+import parser.components.Variable;
 
 public class MethodParser {
 
@@ -13,14 +14,73 @@ public class MethodParser {
 		m.methodData = beautify(m.methodData);
 		breakFragments(m.methodData);
 		
-		print();
+		parseBeforeParameter(m);
+		parseParameter(m);
+		parseMethodBody();
+		//print();
 	}
 	
+	private void parseMethodBody() {
+		//System.out.println(body);
+		if(body.trim().isEmpty()) return; //this is a method without body
+		
+		body = beautifyMethodBody(body);
+		
+		String fragments[] = body.trim().split(";");
+		for(String s:fragments) System.out.println(s.trim());
+	}
+	
+	private String beautifyMethodBody(String s) {
+		
+		String temp = s;
+		
+		
+		temp = temp.replaceAll("\\(", "\\;(;");
+		temp = temp.replaceAll("\\)", "\\;);");
+		temp = temp.replaceAll("\\{", "\\;{;");
+		temp = temp.replaceAll("\\}", "\\;};");
+		
+		//System.out.println(temp);
+		
+		return temp;
+	}
+	
+	
+	private void parseBeforeParameter(Method m) {
+		
+		if( beforeParameter.trim().isEmpty() ) return; //if no string exists before parameter
+		
+		String words [] = beforeParameter.trim().split(" ");
+		int len = words.length;
+		
+		m.methodName = words[len-1];
+		
+		String returnType = "";
+		for(int i=0; i<len-1; i++) returnType += (words[i]+" ");
+		m.methodReturnType = returnType.trim();
+		
+		//System.out.println(m.methodReturnType+" "+m.methodName);
+	}
+	
+	private void parseParameter(Method m) {
+		
+		if( parameter.trim().isEmpty() ) return; //no parameter is present. So return the function
+		
+		String allParameter [] = parameter.split(",");
+		
+		for(String s: allParameter) {
+			m.parameters.add( new Variable(s) );
+		}
+		
+	}
+	
+	/*
 	private void print() {
 		System.out.println(beforeParameter);
 		System.out.println(parameter);
 		System.out.println(body);
 	}
+	*/
 	
 	private void breakFragments(String s) {
 		
@@ -59,7 +119,7 @@ public class MethodParser {
 			}
 		}
 		
-		for(i = len - 1 ; i>0; i--) {
+		for(i = len - 1 ; i>=flag; i--) {
 			
 			if( s.charAt(i) == '}' ) {
 				body = s.substring(flag, i);
