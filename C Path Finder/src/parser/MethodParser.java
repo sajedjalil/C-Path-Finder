@@ -1,5 +1,7 @@
 package parser;
 
+import java.util.ArrayList;
+
 import parser.components.Method;
 import parser.components.Variable;
 
@@ -18,6 +20,8 @@ public class MethodParser {
 		parseParameter(m);
 		parseMethodBody();
 		//print();
+		//System.out.println("________________________________________");
+		
 	}
 	
 	private void parseMethodBody() {
@@ -26,8 +30,23 @@ public class MethodParser {
 		
 		body = beautifyMethodBody(body);
 		
-		String fragments[] = body.trim().split(";");
-		for(String s:fragments) System.out.println(s.trim());
+		removeJunks(body);
+	}
+	
+	
+	
+	private void removeJunks(String bodyContents) {
+		String temp [] = bodyContents.split(";");
+		ArrayList<String> lines = new ArrayList<String>();
+		int len = temp.length;
+		
+		for( int i=0; i<len; i++) {
+			if( temp[i].trim().isEmpty() ) continue;
+			else lines.add(temp[i].trim());
+		}
+		
+		for(String s: lines) System.out.println(s);
+		
 	}
 	
 	private String beautifyMethodBody(String s) {

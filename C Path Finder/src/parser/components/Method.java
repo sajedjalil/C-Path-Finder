@@ -12,9 +12,9 @@ public class Method extends Component {
 	public String methodName = "";
 	public String methodReturnType = "";
 	
-	
-	
 	public ArrayList<Variable> parameters = new ArrayList<Variable>();
+	
+	
 	
 	public Method( int startLine, int finishLine, List<String> temp ) {
 		
