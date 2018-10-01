@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import inputFileLoader.CustomFileReader;
 import parser.ComponentSeparator;
 import parser.*;
+import controlFlowGraphBuilder.*;
 
 public class ObjectFile {
 
@@ -45,8 +46,8 @@ public class ObjectFile {
 	private void parseMethods() {
 		for(Method m: methods) {
 			
-			new MethodParser(m);
-			
+			new MethodParser(m); //parse method
+			new CFGBulider(m);
 			//System.out.println(m.parameters.size());
 		}
 	}

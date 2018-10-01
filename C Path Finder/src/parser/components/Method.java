@@ -13,7 +13,7 @@ public class Method extends Component {
 	public String methodReturnType = "";
 	
 	public ArrayList<Variable> parameters = new ArrayList<Variable>();
-	
+	public ArrayList<String> body = new ArrayList<String>();
 	
 	
 	public Method( int startLine, int finishLine, List<String> temp ) {

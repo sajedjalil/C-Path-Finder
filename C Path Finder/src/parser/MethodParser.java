@@ -1,6 +1,8 @@
 package parser;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 
 import parser.components.Method;
 import parser.components.Variable;
@@ -18,35 +20,83 @@ public class MethodParser {
 		
 		parseBeforeParameter(m);
 		parseParameter(m);
-		parseMethodBody();
+		parseMethodBody(m);
 		//print();
 		//System.out.println("________________________________________");
 		
 	}
 	
-	private void parseMethodBody() {
+	private void parseMethodBody(Method m) {
 		//System.out.println(body);
 		if(body.trim().isEmpty()) return; //this is a method without body
 		
 		body = beautifyMethodBody(body);
+
+		m.body =  removeJunks(body);
 		
-		removeJunks(body);
+		m.body = insertTab(m.body);
+		
+		//for(String s: m.body) System.out.println(s);
 	}
 	
 	
+	private ArrayList<String> insertTab(ArrayList<String> lines) {
+		
+		ArrayList<String> temp = new ArrayList<String>();
+		ArrayList<String> target = new ArrayList<String>( Arrays.asList("if", "else", "for", "do", "while"));
+		
+		int level = 0;
+		int lastFoundTarget = -3;
+		
+		for(int i=0; i<lines.size(); i++) {
+			
+			String words[] = lines.get(i).split(" +");
+			
+			
+			if( words[0].contains("{") ) {
+				level++;
+			}
+			
+			if( lastFoundTarget == i-1 && !words[0].contains("{") ) {
+				temp.add(  String.join("", Collections.nCopies(level+1, "\t")) + lines.get(i)  ); //insert tabs of level basis
+			}
+			else temp.add(  String.join("", Collections.nCopies(level, "\t")) + lines.get(i)  ); //insert tabs of level basis
+			
+			if( target.contains(words[0]) ) {
+				lastFoundTarget = i;
+			}
+			else if( words[0].contains("}") ) {
+				level--;
+			}
+			
+			
+			
+		}
+		
+		//for(String s: temp) System.out.println(s);
+		return temp;
+		
+	}
 	
-	private void removeJunks(String bodyContents) {
+	
+	private ArrayList<String> removeJunks(String bodyContents) {
+		
 		String temp [] = bodyContents.split(";");
-		ArrayList<String> lines = new ArrayList<String>();
 		int len = temp.length;
+		
+		ArrayList<String> lines = new ArrayList<String>();
+		
 		
 		for( int i=0; i<len; i++) {
 			if( temp[i].trim().isEmpty() ) continue;
 			else lines.add(temp[i].trim());
 		}
 		
-		for(String s: lines) System.out.println(s);
+		/** test */
+		//for(String s: lines) System.out.println(s);
 		
+		
+		return lines;
 	}
 	
 	private String beautifyMethodBody(String s) {
@@ -54,11 +104,11 @@ public class MethodParser {
 		String temp = s;
 		
 		
-		temp = temp.replaceAll("\\(", "\\;(;");
-		temp = temp.replaceAll("\\)", "\\;);");
+		//temp = temp.replaceAll("\\(", "\\;(;");
+		temp = temp.replaceAll("\\)", "\\);");
 		temp = temp.replaceAll("\\{", "\\;{;");
 		temp = temp.replaceAll("\\}", "\\;};");
-		
+		temp = temp.replaceAll("else", "else;");
 		//System.out.println(temp);
 		
 		return temp;
@@ -152,14 +202,18 @@ public class MethodParser {
 	
 	private String beautify(String s) {
 		
+		ArrayList <String> target = new ArrayList<String>( Arrays.asList( "(", ")", "{", "}", ";", "," ) );
+		
 		String temp = "";
 		
-		for(int i = 0; i<s.length(); i++) {
+		for(int i = 1; i<s.length(); i++) {
 			
-			char c = s.charAt(i);
+			String c = "" + s.charAt(i);
 			
-			if( Character.isWhitespace(c)  || Character.isLetter(c) || Character.isDigit(c) ) temp += c;
-			else temp += (" "+c+" ");
+			if( target.contains( c) ) temp += (" "+c+" ");
+			else temp += c;
+			//if( Character.isWhitespace(c)  || Character.isLetter(c) || Character.isDigit(c) ) temp += c;
+			//else temp += (" "+c+" ");
 		}
 		
 		return temp;
