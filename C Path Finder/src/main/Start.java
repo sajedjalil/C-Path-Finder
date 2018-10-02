@@ -22,12 +22,12 @@ public class Start {
 	private void init() {
 		long startTime = System.nanoTime();
 		/** */
-		new InputFileCopyMachine("D:\\eclipse-workspace\\Datasets", "D:\\eclipse-workspace\\Results");
+		new InputFileCopyMachine("E:\\Datasets\\test", "E:\\Results\\test");
 		
 		long endTime   = System.nanoTime();
 		System.out.println(endTime-startTime);
 		/** */
-		new CodeBeautifier( new File("D:\\eclipse-workspace\\Results"));
+		new CodeBeautifier( new File("E:\\Results\\test"));
 		
 		endTime = System.nanoTime();
 		System.out.println(endTime-startTime);

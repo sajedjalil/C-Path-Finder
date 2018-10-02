@@ -108,7 +108,9 @@ public class MethodParser {
 		temp = temp.replaceAll("\\)", "\\);");
 		temp = temp.replaceAll("\\{", "\\;{;");
 		temp = temp.replaceAll("\\}", "\\;};");
+		
 		temp = temp.replaceAll("else", "else;");
+		temp = temp.replaceAll("else;[ ]*if", "else if");
 		//System.out.println(temp);
 		
 		return temp;

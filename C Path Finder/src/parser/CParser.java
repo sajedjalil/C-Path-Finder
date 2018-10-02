@@ -20,7 +20,7 @@ public class CParser {
 	
 	
 	public static void main(String[] args) {
-		new CParser(new File("D:\\eclipse-workspace\\Results"));
+		new CParser(new File("E:\\Results\\test"));
 	}
 	
 	
