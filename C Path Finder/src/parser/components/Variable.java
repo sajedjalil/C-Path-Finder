@@ -8,7 +8,15 @@ public class Variable {
 	private String dataType = "";
 	private String name = "";
 	private String actualValue = "";
-	private String smbolicValue = "";
+	private String symbolicValue = "";
+	
+	public void setSymbolicValue(String symbolicValue) {
+		this.symbolicValue = symbolicValue;
+	}
+	
+	public String getSymbolicValue() {
+		return symbolicValue;
+	}
 	
 	public String getDataType() {
 		return dataType;
@@ -16,6 +24,10 @@ public class Variable {
 	
 	public String getName() {
 		return name;
+	}
+	
+	public String getActualValue() {
+		return actualValue;
 	}
 	
 	public Variable( String line ) {
@@ -33,6 +45,17 @@ public class Variable {
 		int size = words.size();
 		
 		if( words.contains("=")) {
+			
+			
+			String beforeEqualSign[] = line.split("=")[0].trim().split(" +");
+			String afterEqualSign = line.split("=")[1].trim();
+			
+			//System.out.println(words.size());
+			for(int i=0; i<beforeEqualSign.length-1; i++) dataType += (beforeEqualSign[i]+" "); //variable type
+			dataType = dataType.trim(); // trim the last space
+			name = beforeEqualSign[beforeEqualSign.length-1]; //last element is name;
+			
+			actualValue = afterEqualSign;
 			
 		}
 		else {

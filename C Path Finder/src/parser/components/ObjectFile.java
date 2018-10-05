@@ -2,9 +2,11 @@ package parser.components;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import inputFileLoader.CustomFileReader;
 import parser.ComponentSeparator;
+import symbolicSolver.SymbolicSolver;
 import parser.*;
 import controlFlowGraphBuilder.*;
 
@@ -44,11 +46,29 @@ public class ObjectFile {
 	
 	
 	private void parseMethods() {
+		
 		for(Method m: methods) {
 			
 			new MethodParser(m); //parse method
 			new CFGBulider(m);
-			//System.out.println(m.parameters.size());
+			
+			m.getLocalVariables();
+			m.printPaths();
+			
+			/*
+			for(int i=0; i<m.paths.size(); i++) {
+				for(int j:m.paths.get(i)) System.out.print(j+" ");
+				System.out.println();
+			}  */
+			//System.out.println(m.paths.size());
+			//System.out.println(m.body);
+			//for(Variable v: m.localVariables) System.out.println(v.getName()+" "+v.getActualValue()+" "+v.getDataType());
+			new SymbolicSolver(m);
+			//for(Variable v: m.localVariables) System.out.println(v.getName()+" "+v.getDataType()+" "+v.getSymbolicValue());
+			//for(Variable v: m.parameters) System.out.println(v.getName()+" "+v.getActualValue()+" "+v.getSymbolicValue());
+			
+			
+			//m.printPaths();
 		}
 	}
 

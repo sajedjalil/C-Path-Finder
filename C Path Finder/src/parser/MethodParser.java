@@ -212,12 +212,12 @@ public class MethodParser {
 			
 			String c = "" + s.charAt(i);
 			
-			if( target.contains( c) ) temp += (" "+c+" ");
+			if( target.contains(c) ) temp += (" "+c+" ");
 			else temp += c;
 			//if( Character.isWhitespace(c)  || Character.isLetter(c) || Character.isDigit(c) ) temp += c;
 			//else temp += (" "+c+" ");
 		}
-		
+		//System.out.println(temp);
 		return temp;
 		//System.out.println(temp);
 	}

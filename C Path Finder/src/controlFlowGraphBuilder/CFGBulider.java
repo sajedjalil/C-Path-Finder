@@ -8,8 +8,8 @@ import parser.components.*;
 public class CFGBulider {
 	
 	ArrayList <String> methodBodyWords = new ArrayList<String>();
-	ArrayList <String> dataTypes = new ArrayList<String>( Arrays.asList("int", "float", "double", "char") ); 
-	
+	ArrayList <String> dataTypes = new ArrayList<String>( Arrays.asList("short", "long", "signed", "unsigned", "register",
+			"int", "float", "double", "char") );
 	private ArrayList<Node> nodes = new ArrayList<Node>();
 	public Node root;
 	
@@ -24,7 +24,7 @@ public class CFGBulider {
 		buildNodes();
 		
 		//for(Node n: nodes) System.out.println(n.level);
-		buildFlowVertices(0);
+		buildEdges(0);
 		
 		buildTree();
 		/*
@@ -35,6 +35,8 @@ public class CFGBulider {
 		}
 		*/
 		//printPaths();
+		m.nodes = nodes;
+		m.executionTree = root;
 	}
 	
 	private void beautify() {
@@ -50,16 +52,29 @@ public class CFGBulider {
 			
 			String words [] = s.split(" +");
 			
-			//System.out.println(words[0]);
+			//System.out.println(s);
 			if( dataTypes.contains(words[0]) ) {
 				
 				//modify s to detect method if a method call exits in variable declaration  
 				s = keepMethodCallsUnchanged(s);
+				//System.out.println(s);
 				String parts[] = s.split(";");
+				
+				//set variable type
+				String variableType = "";
+				if( parts.length > 0 ) {
+					
+					String k[] = parts[0].split(" +");
+					
+					for(int i=0; i<k.length-1; i++) variableType += (" "+k[i]);
+					
+					variableType = variableType.trim();
+				}
+				
 				
 				for(int i=0; i<parts.length; i++) {
 					if( i== 0 ) temp.add(parts[i]);
-					else temp.add(words[0]+" "+parts[i].trim());
+					else temp.add(variableType+" "+parts[i].trim());
 				}
 			}
 			else temp.add(s);
@@ -138,7 +153,7 @@ public class CFGBulider {
 		for(String s: methodBodyWords) {
 			
 			int level = findTabDepth(s);
-		
+			//System.out.println(s);
 			nodes.add( new Node( id++, s.trim(), level) );
 		}
 		
@@ -148,7 +163,7 @@ public class CFGBulider {
 	
 	
 	
-	private void buildFlowVertices(int prevPosition) {
+	private void buildEdges(int prevPosition) {
 		
 		int len = nodes.size();
 		
