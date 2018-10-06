@@ -282,7 +282,7 @@ public class CFGBulider {
 		
 		
 	}
-	
+	/*
 	private int sequence[];
 	
 	private void printPaths() {
@@ -313,5 +313,5 @@ public class CFGBulider {
 		}
 		
 		sequence[n.id] = 0;
-	}
+	} */
 }

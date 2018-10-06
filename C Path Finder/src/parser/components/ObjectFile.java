@@ -52,8 +52,7 @@ public class ObjectFile {
 			new MethodParser(m); //parse method
 			new CFGBulider(m);
 			
-			m.getLocalVariables();
-			m.printPaths();
+			m.findPaths();
 			
 			/*
 			for(int i=0; i<m.paths.size(); i++) {

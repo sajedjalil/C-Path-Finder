@@ -15,16 +15,11 @@ public class Method extends Component {
 	public String methodReturnType = "";
 	
 	public ArrayList<Variable> parameters = new ArrayList<Variable>();
-	public ArrayList<Variable> localVariables = new ArrayList<Variable>();
 	public ArrayList<String> body = new ArrayList<String>();
 	
 	public ArrayList<Node> nodes = new ArrayList<Node>();
 	public Node executionTree = null;
 	public ArrayList< ArrayList<Integer> > paths = new ArrayList< ArrayList<Integer> >();
-	
-	private ArrayList <String> dataTypes = new ArrayList<String>( Arrays.asList("short", "long", "signed", "unsigned", "register",
-			"int", "float", "double", "char") );
-	
 	
 	
 	public Method( int startLine, int finishLine, List<String> temp ) {
@@ -36,22 +31,11 @@ public class Method extends Component {
 	}
 	
 	
-	public void getLocalVariables() {
-		
-		for(Node n: nodes) {
-			
-			if( dataTypes.contains( n.content.split(" +")[0] ) ) {
-				
-				localVariables.add( new Variable(n.content) );
-			}
-		}
-	}
-	
 	
 	private int sequence[];
 	
 	
-	public void printPaths() {
+	public void findPaths() {
 		sequence = new int[nodes.size()];	
 		
 		for(int i=0; i<sequence.length; i++) {

@@ -9,22 +9,24 @@ import parser.components.Variable;
 
 class SMTSolver {
 	
-	Map<String, String> variableMap = new HashMap<String, String>();
+	Map<String, Variable> variableMap = new HashMap<String, Variable>();
+	ArrayList<String> contidtions = new ArrayList<String>();
+	
 	
 	public SMTSolver() {
 		
 	}
 	
-	void putValue( String name, String symbol ) {
+	void putValue( String name, Variable v ) {
 		
 		
-		if( !variableMap.containsKey(name) ) variableMap.put(name, symbol);
+		if( !variableMap.containsKey(name) ) variableMap.put(name, v);
 		//System.out.println(variableMap.size());
 	}
 	
 	/* int k = 9;
 	 * int i = 4;
-	 * k = i - 9; 
+	 * k = i - k; 
 	 */
 	void parseAssignment(Node n, ArrayList <Variable> variables) {
 		
