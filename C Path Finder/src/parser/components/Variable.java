@@ -8,15 +8,7 @@ public class Variable {
 	private String dataType = "";
 	private String name = "";
 	private String actualValue = "";
-	private String symbolicValue = "";
-	
-	public void setSymbolicValue(String symbolicValue) {
-		this.symbolicValue = symbolicValue;
-	}
-	
-	public String getSymbolicValue() {
-		return symbolicValue;
-	}
+	public String line = "";
 	
 	public String getDataType() {
 		return dataType;
@@ -30,8 +22,12 @@ public class Variable {
 		return actualValue;
 	}
 	
+	public void setActualValue(String actualValue) {
+		this.actualValue = actualValue;
+	}
+	
 	public Variable( String line ) {
-		
+		this.line = line;
 		parseLine(line);
 	}
 	

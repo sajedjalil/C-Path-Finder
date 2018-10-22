@@ -15,6 +15,7 @@ class SMTSolver {
 	
 	public SMTSolver() {
 		
+		//variableMap.clear();
 	}
 	
 	void putValue( String name, Variable v ) {
