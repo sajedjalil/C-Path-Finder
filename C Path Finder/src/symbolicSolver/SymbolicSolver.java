@@ -26,9 +26,13 @@ public class SymbolicSolver {
 		
 		for(int i=0; i<m.paths.size(); i++) {
 			System.out.println("Case: " + (i+1));
+			
 			analyzeSinglePath(i, m);
+			
 		}
 	}
+	
+	
 	
 	private void analyzeSinglePath( int serial, Method m) {
 		
@@ -52,7 +56,7 @@ public class SymbolicSolver {
 				
 				//condition: true
 				if( m.nodes.get(i).rightChildID == m.nodes.get(nextID).id )
-					solver.contidtions.add( returnSymbolicCondition( m.nodes.get(i).conditions, solver ) );
+					solver.contidtions.add( "( "+ returnSymbolicCondition( m.nodes.get(i).conditions, solver ) +" )" );
 				else {
 					solver.contidtions.add( "!( "+returnSymbolicCondition( m.nodes.get(i).conditions, solver )  +" )");
 				}
@@ -64,7 +68,9 @@ public class SymbolicSolver {
 			}
 		}
 		
+		
 		for(String s: solver.contidtions) System.out.println(s);
+		solver.analyze("a < 1 && a > 1");
 		
 		//if( solver.variableMap.containsKey("b"))
 			//System.out.println( solver.variableMap.get("b").getSymbolicValue());
@@ -131,6 +137,8 @@ public class SymbolicSolver {
 			else temp += s+" ";
 		}
 		
+		//add brackets
+		if( temp.trim().split(" +").length > 1 ) temp = "( "+temp+" )";
 		v.setActualValue(temp.trim());
 		
 	}
@@ -139,7 +147,7 @@ public class SymbolicSolver {
 		
 		for(int i=0; i<m.parameters.size(); i++) {
 			
-			Variable v = new Variable(m.parameters.get(i).line );		;
+			Variable v = new Variable(m.parameters.get(i).line );
 			solver.putValue( m.parameters.get(i).getName(),  v);
 		}
 	}

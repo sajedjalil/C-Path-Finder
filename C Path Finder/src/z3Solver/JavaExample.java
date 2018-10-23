@@ -1113,7 +1113,8 @@ class JavaExample
     {
         System.out.println("FindModelExample2");
         Log.append("FindModelExample2");
-
+        
+        
         IntExpr x = ctx.mkIntConst("x");
         IntExpr y = ctx.mkIntConst("y");
         //FPExpr f = (FPExpr)ctx.mkConst(ctx.mkSymbol("f"), ctx.mkFPSort(11, 53) );
