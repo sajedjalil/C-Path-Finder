@@ -101,11 +101,25 @@ public class MethodParser {
 	
 	private String beautifyMethodBody(String s) {
 		
-		String temp = s;
+		String temp = "";
 		
 		
 		//temp = temp.replaceAll("\\(", "\\;(;");
-		temp = temp.replaceAll("\\)", "\\);");
+		int counter = 0;
+		for(int i=0; i<s.length(); i++) {
+			
+			temp += s.charAt(i);
+			
+			if( s.charAt(i) == '(') {
+				counter++;
+			}
+			else if (s.charAt(i) == ')') {
+				counter--;
+				if( counter == 0 ) temp += ';';
+			}
+		}
+		// if( (a+b) )  becomes if( (a+b) );
+		//temp = temp.replaceAll("\\)", "\\);");
 		temp = temp.replaceAll("\\{", "\\;{;");
 		temp = temp.replaceAll("\\}", "\\;};");
 		

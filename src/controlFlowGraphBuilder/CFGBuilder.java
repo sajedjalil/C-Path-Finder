@@ -110,7 +110,7 @@ public class CFGBuilder {
 		ArrayList <String> target = new ArrayList<String>( Arrays.asList( "+", "-", "*", "/", "=", ">", "<", "%", "&", "|", "~", "^" ) );
 		ArrayList <String> clear = new ArrayList<String>();
 		
-		
+		//for(String s: methodBodyWords) System.out.println(s);
 		
 		for(int i=0; i< methodBodyWords.size(); i++) {
 			
@@ -137,6 +137,7 @@ public class CFGBuilder {
 				
 			}
 			
+			//temp = fixMinusValue(temp);
 			clear.add(temp);
 		}
 		
@@ -144,6 +145,7 @@ public class CFGBuilder {
 		//for(String s: clear) System.out.println(s);
 		methodBodyWords = clear;
 	}
+	
 	
 	private void buildNodes() {
 		
@@ -173,7 +175,9 @@ public class CFGBuilder {
 			//start of if bloc
 			if( nodes.get(i).content.trim().split(" +")[0].trim().equals("if") ) {
 				
+				//System.out.println(nodes.get(i).level);
 				int finishNode = getIfBlockFinishNode( i , nodes.get(i).level);
+				//System.out.println(i+" *** "+finishNode);
 				ArrayList<Integer> positions = getNeighbourNodesOfIf( i, finishNode, nodes.get(i).level);
 				positions.add(finishNode);
 				

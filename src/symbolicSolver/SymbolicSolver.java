@@ -58,7 +58,7 @@ public class SymbolicSolver {
 				if( m.nodes.get(i).rightChildID == m.nodes.get(nextID).id )
 					solver.contidtions.add( "( "+ returnSymbolicCondition( m.nodes.get(i).conditions, solver ) +" )" );
 				else {
-					solver.contidtions.add( "!( "+returnSymbolicCondition( m.nodes.get(i).conditions, solver )  +" )");
+					solver.contidtions.add( "! ( "+returnSymbolicCondition( m.nodes.get(i).conditions, solver )  +" )");
 				}
 			}
 			else if( m.nodes.get(i).ifAssignmentStatement == true || dataTypes.contains( m.nodes.get(i).content.split(" +")[0])) {
@@ -70,7 +70,7 @@ public class SymbolicSolver {
 		
 		
 		for(String s: solver.contidtions) System.out.println(s);
-		solver.analyze("a < 1 && a > 1");
+		solver.analyze("");
 		
 		//if( solver.variableMap.containsKey("b"))
 			//System.out.println( solver.variableMap.get("b").getSymbolicValue());

@@ -45,6 +45,20 @@ class SMTSolver {
 	
 	void analyze(String line) {
 		
+		
+		String temp =  getCombineConditions();
+		//System.out.println(temp);
+		//System.out.println(ifNegativeExpression(temp));
+		//return;
+		//System.out.println(removeFalseSign(temp));
+		solve(temp);
+        
+	}
+	
+	private void solve(String line) {
+		
+		if( line.equals("")) return; //nothing to generate
+		
 		BoolExpr t = makeConjunctionExpression(line);
 		Model model;
 		try {
@@ -56,10 +70,21 @@ class SMTSolver {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-        
 	}
 	
-	Model check(Context ctx, BoolExpr f, Status sat) throws Exception
+	private String getCombineConditions() {
+		//System.out.println(contidtions.size());
+		String temp = "";
+		if( contidtions.size() == 0) return "";
+		
+		
+		for(int i=0; i<contidtions.size()-1; i++) temp += (contidtions.get(i) + " && " );
+		temp += contidtions.get( contidtions.size()-1);
+		//System.out.println(temp);
+		return temp.trim();
+	}
+	
+	private Model check(Context ctx, BoolExpr f, Status sat) throws Exception
     {
         Solver s = ctx.mkSolver();
         s.add(f);
@@ -72,7 +97,7 @@ class SMTSolver {
     }
 
 	
-	String removeOuterMostBracketContent( String line ) {
+	private String removeOuterMostBracketContent( String line ) {
 		
 		int level = 0;
 		
@@ -92,15 +117,24 @@ class SMTSolver {
 		return line.substring(1, line.length()-1).trim();
 	}
 	
-	BoolExpr makeConjunctionExpression( String line ) {
+	private BoolExpr makeConjunctionExpression( String line ) {
 		
+		// !( a + 5 > 3 )
+		if( ifNegativeExpression(line) == true ) {
+			line = removeFalseSign(line);
+			//System.out.println(line);
+			return ctx.mkNot( makeConjunctionExpression(line) );
+		}
 		
 		//System.out.println(line);
 		line = removeOuterMostBracketContent(line.trim()); //remove excess outer brackets
 		//System.out.println(line);
 		
+		//in case no more && or ||
+		if( !line.contains("&&") && !line.contains("||")) return makeBooleanExpression(line);
+		
 		int counter = 0;
-		String sign = null;
+		String sign = "";
 		BoolExpr temp1 = null, temp2 = null;
 		
 		String first = "", second ="";
@@ -122,8 +156,8 @@ class SMTSolver {
 		for(int i=flag+1; i<words.length; i++) second += (words[i]+" ");
 		
 		//System.out.println(first+ " " + second);
-		temp1 = makeBooleanExpression( first.trim() );
-		temp2 = makeBooleanExpression( second.trim() );
+		temp1 = makeConjunctionExpression( first.trim() );
+		temp2 = makeConjunctionExpression( second.trim() );
 		
 		return returnConjunctionExpression(sign, temp1, temp2);
 		
@@ -138,13 +172,14 @@ class SMTSolver {
 	}
 	
 	
-	BoolExpr makeBooleanExpression( String line ) {
+	private BoolExpr makeBooleanExpression( String line ) {
 		
+		if(line.equals("")) return null;
 		//System.out.println(line);
 		line = removeOuterMostBracketContent(line.trim()); //remove excess outer brackets
 		//System.out.println(line);
 		
-		
+		//System.out.println(line);
 		int counter = 0;
 		String sign = null;
 		ArithExpr temp1 = null, temp2 = null;
@@ -167,7 +202,12 @@ class SMTSolver {
 		for(int i=0; i<flag; i++) first += (words[i]+" ");
 		for(int i=flag+1; i<words.length; i++) second += (words[i]+" ");
 		
+		first = first.trim();
+		second = second.trim();
+		//System.out.println(flag);
 		//System.out.println(first+ " " + second);
+		
+		
 		temp1 = makeArithmeticExpression( first.trim() );
 		temp2 = makeArithmeticExpression( second.trim() );
 		
@@ -186,10 +226,11 @@ class SMTSolver {
 		else return null;
 	}
 	
-	ArithExpr makeArithmeticExpression( String line ) {
+	private ArithExpr makeArithmeticExpression( String line ) {
 		
 		//System.out.println(line);
 		line = removeOuterMostBracketContent(line.trim()); //remove excess outer brackets
+		line = fixMinusValue(line); // fix negative values
 		//System.out.println(line);
 		
 		
@@ -229,11 +270,12 @@ class SMTSolver {
 	}
 	
 	private IntExpr makeInteger(String word) {
-		
+		//System.out.println(word);
 		word = word.trim();
 		
 		if( word.length() == 0 ) return null;
-		else if( Character.isDigit(word.charAt(0)) ) return makeIntConstant(word);
+		else if( Character.isDigit(word.charAt(0)) || word.charAt(0) == '-' ) 
+			return makeIntConstant(word);
 		else return makeIntVariable(word);
 	}
 	
@@ -257,4 +299,71 @@ class SMTSolver {
 		}
 		return intVariables.get(variable);
 	}
+	
+	private String removeFalseSign(String line) {
+		
+		if( line.length() == 0) return line;
+		
+		line = line.trim();
+		if( line.charAt(0) == '!' ) line = line.substring(1);
+		
+		//System.out.println(line);
+		return line.trim();
+	}
+	
+	private Boolean ifNegativeExpression(String line) {
+		
+		if(line.length() == 0) return false;
+		
+		line = line.trim();
+		Boolean flag = false;
+		
+		if( line.charAt(0) == '!') {
+			
+			flag = true;
+			line = line.substring(1); //remove !
+			String words[] = line.split(" +");
+			
+			int counter = 0;
+			for(int i=0; i<words.length; i++) {
+				
+				if( words[i].equals("(")) counter++;
+				else if( words[i].equals(")") ) {
+					
+					counter--;
+					if( counter == 0 && i != words.length-1 ) {
+						flag = false;
+						break;
+					}
+					
+				}
+				
+			}
+		}
+		
+		return flag;
+	}
+	
+	
+	// - 2 < 5
+	// a - 2 < 5
+	// 3 - 4 < 5
+	// 3 - a < 5
+	private String fixMinusValue(String line) {
+		
+		String words[] = line.split(" +");
+		String temp = " " + words[0];
+		
+		for(int i=1; i<words.length; i++) {
+			
+			if( words[i-1].equals("-") && Character.isDigit( words[i].charAt(0)) ) {
+				temp += words[i];
+			}
+			else temp += (" "+words[i]);
+		}
+		
+		return temp.trim();
+	}
+	
+	
 }
