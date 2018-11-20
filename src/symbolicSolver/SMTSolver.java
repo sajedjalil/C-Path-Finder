@@ -8,6 +8,8 @@ import java.util.Map;
 import com.microsoft.z3.ArithExpr;
 import com.microsoft.z3.BoolExpr;
 import com.microsoft.z3.Context;
+import com.microsoft.z3.FPExpr;
+import com.microsoft.z3.FPSort;
 import com.microsoft.z3.IntExpr;
 import com.microsoft.z3.Model;
 import com.microsoft.z3.Solver;
@@ -21,6 +23,7 @@ class SMTSolver {
 	ArrayList<String> contidtions = new ArrayList<String>();
 	
 	Map<String, IntExpr> intVariables = new HashMap<String, IntExpr>();
+	Map<String, FPExpr> floatVariables = new HashMap<String, FPExpr>();
 	
 	HashMap<String, String> cfg = new HashMap<String, String>();
     Context ctx = new Context(cfg);
@@ -51,8 +54,17 @@ class SMTSolver {
 		//System.out.println(ifNegativeExpression(temp));
 		//return;
 		//System.out.println(removeFalseSign(temp));
+		//System.out.println(temp);
 		solve(temp);
         
+		
+		//test();
+		
+	}
+	
+	private void test() {
+		
+	
 	}
 	
 	private void solve(String line) {
@@ -118,7 +130,7 @@ class SMTSolver {
 	}
 	
 	private BoolExpr makeConjunctionExpression( String line ) {
-		
+		//System.out.println(line+"*");
 		// !( a + 5 > 3 )
 		if( ifNegativeExpression(line) == true ) {
 			line = removeFalseSign(line);
@@ -175,14 +187,14 @@ class SMTSolver {
 	private BoolExpr makeBooleanExpression( String line ) {
 		
 		if(line.equals("")) return null;
-		//System.out.println(line);
+		//System.out.println(line+"*");
 		line = removeOuterMostBracketContent(line.trim()); //remove excess outer brackets
 		//System.out.println(line);
 		
 		//System.out.println(line);
 		int counter = 0;
 		String sign = null;
-		ArithExpr temp1 = null, temp2 = null;
+		
 		
 		String first = "", second ="";
 		
@@ -199,6 +211,8 @@ class SMTSolver {
 			}
 		}
 		
+		//System.out.println(sign+"*");
+		
 		for(int i=0; i<flag; i++) first += (words[i]+" ");
 		for(int i=flag+1; i<words.length; i++) second += (words[i]+" ");
 		
@@ -208,31 +222,98 @@ class SMTSolver {
 		//System.out.println(first+ " " + second);
 		
 		
-		temp1 = makeArithmeticExpression( first.trim() );
-		temp2 = makeArithmeticExpression( second.trim() );
+		if( getExpressionType(line) == 1) { 
+			
+			ArithExpr temp1 = null, temp2 = null;
+			temp1 = makeArithmeticExpression( first.trim() );
+			temp2 = makeArithmeticExpression( second.trim() );
+			return returnBoolIntExpression(sign, temp1, temp2);
+		}
+		else {
+			FPExpr temp1 = null, temp2 = null;
+			temp1 = makeFloatingExpression( first.trim() );
+			temp2 = makeFloatingExpression( second.trim() );
+			return returnBoolFloatExpression(sign, temp1, temp2);
+		}
 		
-		return returnBoolExpression(sign, temp1, temp2);
 		
 	}
 	
-	private BoolExpr returnBoolExpression(String sign, ArithExpr temp1, ArithExpr temp2) {
-		
+	private BoolExpr returnBoolFloatExpression(String sign, FPExpr temp1, FPExpr temp2) {
+		//System.out.println( sign + " "+ temp1.toString() +  " "+ temp2.toString());
+		if( sign.equals("<") ) return ctx.mkFPLt(temp1, temp2);
+		else if( sign.equals("<=") ) return ctx.mkNot( ctx.mkFPGt(temp1, temp2) );
+		else if( sign.equals(">") ) return ctx.mkFPGt(temp1, temp2);
+		else if( sign.equals(">=") ) return ctx.mkNot( ctx.mkFPLt(temp1, temp2) );
+		else if( sign.equals("==") ) return ctx.mkFPEq(temp1, temp2);
+		else if( sign.equals("!=") ) return ctx.mkNot( ctx.mkEq(temp1, temp2) );
+		else return null;
+	}
+	
+	private BoolExpr returnBoolIntExpression(String sign, ArithExpr temp1, ArithExpr temp2) {
+		//System.out.println( sign + " "+ temp1.toString() +  " "+ temp2.toString());
 		if( sign.equals("<") ) return ctx.mkLt(temp1, temp2);
-		else if( sign.equals("<=") ) return ctx.mkGt(temp1, temp2);
+		else if( sign.equals("<=") ) return ctx.mkNot( ctx.mkGt(temp1, temp2) );
 		else if( sign.equals(">") ) return ctx.mkGt(temp1, temp2);
-		else if( sign.equals(">=") ) return ctx.mkLt(temp1, temp2);
+		else if( sign.equals(">=") ) return ctx.mkNot( ctx.mkLt(temp1, temp2) );
 		else if( sign.equals("==") ) return ctx.mkEq(temp1, temp2);
 		else if( sign.equals("!=") ) return ctx.mkNot( ctx.mkEq(temp1, temp2) );
 		else return null;
 	}
 	
-	private ArithExpr makeArithmeticExpression( String line ) {
+private FPExpr makeFloatingExpression( String line ) {
 		
-		//System.out.println(line);
+		//System.out.println(line+"*");
 		line = removeOuterMostBracketContent(line.trim()); //remove excess outer brackets
 		line = fixMinusValue(line); // fix negative values
 		//System.out.println(line);
 		
+		int counter = 0;
+		Character sign = null;
+		FPExpr temp1 = null, temp2 = null;
+		
+		if( line.split(" +").length == 1 ) return makeFloat( line );
+		
+		for(int i=0; i<line.length(); i++) {
+			
+			if( line.charAt(i) == '(' ) counter++;
+			else if( line.charAt(i) == ')' ) counter--;
+			else if( counter == 0 && operators.contains(line.charAt(i)) ) { // sign found
+				sign = line.charAt(i);
+				
+				//System.out.println("*************");
+				temp1 = makeFloatingExpression( line.substring(0, i-1));
+				temp2 = makeFloatingExpression( line.substring(i+1) );
+				
+				return buildFloatExpression(sign, temp1, temp2);
+			}
+		}
+		
+		//make the arithmetic expression
+		
+		return null;
+	}
+
+
+	private FPExpr buildFloatExpression(Character sign, FPExpr temp1, FPExpr temp2) {
+	
+		//System.out.println( sign + " "+ temp1.toString());
+		if( sign == '+' ) return ctx.mkFPAdd(ctx.mkFPRoundNearestTiesToAway(), temp1, temp2);
+		else if( sign == '-' ) return ctx.mkFPSub(ctx.mkFPRoundNearestTiesToAway(), temp1, temp2);
+		else if( sign == '*' ) return ctx.mkFPMul(ctx.mkFPRoundNearestTiesToAway(), temp1, temp2);
+		else if( sign == '/' ) return ctx.mkFPDiv(ctx.mkFPRoundNearestTiesToAway(), temp1, temp2);
+		else return null;
+	
+	}
+
+	
+	
+	private ArithExpr makeArithmeticExpression( String line ) {
+		
+		//System.out.println(line+"*");
+		line = removeOuterMostBracketContent(line.trim()); //remove excess outer brackets
+		line = fixMinusValue(line); // fix negative values
+		//System.out.println(line);
 		
 		int counter = 0;
 		Character sign = null;
@@ -247,6 +328,7 @@ class SMTSolver {
 			else if( counter == 0 && operators.contains(line.charAt(i)) ) { // sign found
 				sign = line.charAt(i);
 				
+				//System.out.println("*************");
 				temp1 = makeArithmeticExpression( line.substring(0, i-1));
 				temp2 = makeArithmeticExpression( line.substring(i+1) );
 				
@@ -261,6 +343,7 @@ class SMTSolver {
 	
 	private ArithExpr buildArithmeticExpression(Character sign, ArithExpr temp1, ArithExpr temp2) {
 		
+		//System.out.println( sign + " "+ temp1.toString());
 		if( sign == '+' ) return ctx.mkAdd(temp1, temp2);
 		else if( sign == '-' ) return ctx.mkSub(temp1, temp2);
 		else if( sign == '*' ) return ctx.mkMul(temp1, temp2);
@@ -268,6 +351,43 @@ class SMTSolver {
 		else if( sign == '%' ) return ctx.mkMod((IntExpr)temp1, (IntExpr)temp2); 
 		else return null;
 	}
+	
+	
+	
+	
+	private FPExpr makeFloat(String word) {
+		//System.out.println(word);
+		word = word.trim();
+		
+		if( word.length() == 0 ) return null;
+		else if( Character.isDigit(word.charAt(0)) || word.charAt(0) == '-' ) 
+			return makeFloatConstant(word);
+		else return makeFloatVariable(word);
+	}
+	
+	private FPExpr makeFloatVariable(String variable) {
+		
+		if( !floatVariables.containsKey(variable) ) {
+			
+			FPSort s = ctx.mkFPSort(11, 53);
+			FPExpr temp = (FPExpr)ctx.mkConst(ctx.mkSymbol(variable), s);
+			floatVariables.put(variable, temp );
+		}
+		
+		return floatVariables.get(variable);
+	}
+	
+	private FPExpr makeFloatConstant(String variable) {
+		
+		if( !floatVariables.containsKey(variable) ) {
+			FPSort s = ctx.mkFPSort(11, 53);
+			FPExpr temp = ctx.mkFP( Double.parseDouble(variable) , s);
+			floatVariables.put(variable, temp );
+		}
+		return floatVariables.get(variable);
+	}
+	
+	
 	
 	private IntExpr makeInteger(String word) {
 		//System.out.println(word);
@@ -344,6 +464,24 @@ class SMTSolver {
 		return flag;
 	}
 	
+	
+	private int getExpressionType(String line) {
+		
+		String words[] = line.split(" +");
+		int maximum = 1; // we assume initially all to be integer expression
+		
+		for(String word: words) {
+			
+			if( variableMap.containsKey(word) ) {
+				
+				if( variableMap.get(word).getDataType().contains("float") ||
+						variableMap.get(word).getDataType().contains("double")) maximum = 2;
+			}
+		}
+		
+		
+		return maximum;
+	}
 	
 	// - 2 < 5
 	// a - 2 < 5

@@ -21,7 +21,8 @@ public class SymbolicSolver {
 	private void analyzPaths(Method m) {
 		
 		for(Node s: m.nodes) {
-			System.out.println(s.id+" "+s.content);
+			
+			 System.out.println(s.id+" "+s.content);
 		}
 		
 		for(int i=0; i<m.paths.size(); i++) {
