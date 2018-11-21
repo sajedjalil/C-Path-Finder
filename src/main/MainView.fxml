@@ -20,7 +20,7 @@
           </Menu>
           <Menu mnemonicParsing="false" text="Settings">
             <items>
-              <MenuItem mnemonicParsing="false" text="Change Destination" />
+              <MenuItem mnemonicParsing="false" onAction="#changeOutputDirectory" text="Change Destination" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Tutorial">
@@ -33,8 +33,9 @@
       </MenuBar>
       <Button fx:id="openFileButton" layoutX="71.0" layoutY="119.0" mnemonicParsing="false" onAction="#selectFiles" prefHeight="25.0" prefWidth="81.0" text="Select" textAlignment="CENTER" />
       <Text fx:id="openFilePath" layoutX="164.0" layoutY="136.0" strokeType="OUTSIDE" strokeWidth="0.0" text="No Folder Selected" wrappingWidth="200.00000596046448" />
-      <Button fx:id="runButton" layoutX="71.0" layoutY="174.0" mnemonicParsing="false" onAction="#runFiles" prefHeight="25.0" prefWidth="81.0" text="Run" textAlignment="CENTER" />
-      <ProgressBar fx:id="runProgress" layoutX="164.0" layoutY="178.0" prefWidth="200.0" progress="0.0" />
-      <Button fx:id="openResultButton" layoutX="71.0" layoutY="228.0" mnemonicParsing="false" text="Open Result" textAlignment="CENTER" />
+      <Button fx:id="runButton" layoutX="71.0" layoutY="174.0" mnemonicParsing="false" onAction="#runFiles" prefHeight="25.0" prefWidth="81.0" text="Run" textAlignment="CENTER" visible="false" />
+      <ProgressBar fx:id="runProgress" layoutX="164.0" layoutY="178.0" prefWidth="200.0" progress="0.0" visible="false" />
+      <Button fx:id="openResultButton" layoutX="71.0" layoutY="228.0" mnemonicParsing="false" onAction="#openOutputDirectory" text="Open Result" textAlignment="CENTER" visible="false" />
+      <Text fx:id="resultDirectory" layoutX="164.0" layoutY="245.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Result Directory" visible="false" wrappingWidth="200.00000596046448" />
    </children>
 </AnchorPane>

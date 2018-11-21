@@ -3,8 +3,8 @@ package inputCodeBeautifier;
 import java.io.File;
 import java.util.ArrayList;
 
-import inputFileLoader.CustomFileReader;
-import inputFileLoader.CustomFileWriter;
+import io.CustomFileReader;
+import io.CustomFileWriter;
 
 public class CodeBeautifier {
 

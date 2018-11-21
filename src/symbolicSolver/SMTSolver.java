@@ -46,41 +46,32 @@ class SMTSolver {
 	}
 	
 	
-	void analyze(String line) {
-		
+	String analyze() {
 		
 		String temp =  getCombineConditions();
-		//System.out.println(temp);
-		//System.out.println(ifNegativeExpression(temp));
-		//return;
-		//System.out.println(removeFalseSign(temp));
-		//System.out.println(temp);
-		solve(temp);
-        
 		
-		//test();
-		
+		return solve(temp);
 	}
 	
-	private void test() {
-		
 	
-	}
 	
-	private void solve(String line) {
+	private String solve(String line) {
 		
-		if( line.equals("")) return; //nothing to generate
+		if( line.equals("")) return ""; //when nothing to generate
 		
 		BoolExpr t = makeConjunctionExpression(line);
 		Model model;
 		try {
 			model = check(ctx, t , Status.SATISFIABLE);
-			if(model != null ) System.out.println(model);
-			else System.out.println("Unsatisfiable");
+			
+			if(model != null ) return model.toString();
+			else return "Unsatisfiable";
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+		return "Failed to Generate";
 	}
 	
 	private String getCombineConditions() {

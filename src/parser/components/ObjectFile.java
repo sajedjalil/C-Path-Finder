@@ -2,13 +2,13 @@ package parser.components;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 
-import inputFileLoader.CustomFileReader;
 import parser.ComponentSeparator;
+import result.FileResult;
 import symbolicSolver.SymbolicSolver;
 import parser.*;
 import controlFlowGraphBuilder.*;
+import io.CustomFileReader;
 
 public class ObjectFile {
 
@@ -21,22 +21,28 @@ public class ObjectFile {
 	
 	public ArrayList <String> fileData =  new ArrayList<String>();
 	
-	
+	public FileResult result;
 	
 	
 	
 	public ObjectFile(File file) {
 		
-		//read file contents
-		fileData = CustomFileReader.readAfile( file );
-		
-		fileName = file.getName();
-		filePath = file.getPath();
+		init(file);
 		
 		separateMainComponents();
 		parseMethods();
 	}
 	
+	
+	private void init(File file) {
+		//read file contents
+		fileData = CustomFileReader.readAfile( file );
+				
+		fileName = file.getName();
+		filePath = file.getPath();
+		
+		result = new FileResult(file);
+	}
 	
 	private void separateMainComponents() {
 		ComponentSeparator cs = new ComponentSeparator(this);
@@ -50,24 +56,14 @@ public class ObjectFile {
 		for(Method m: methods) {
 			
 			new MethodParser(m); //parse method
-			new CFGBuilder(m);
+			new CFGBuilder(m); // build control flow graph
 			
 			m.findPaths();
 			
-			/*
-			for(int i=0; i<m.paths.size(); i++) {
-				for(int j:m.paths.get(i)) System.out.print(j+" ");
-				System.out.println();
-			}  */
-			//System.out.println(m.paths.size());
-			//System.out.println(m.body);
-			//for(Variable v: m.localVariables) System.out.println(v.getName()+" "+v.getActualValue()+" "+v.getDataType());
-			new SymbolicSolver(m);
-			//for(Variable v: m.localVariables) System.out.println(v.getName()+" "+v.getDataType()+" "+v.getSymbolicValue());
-			//for(Variable v: m.parameters) System.out.println(v.getName()+" "+v.getActualValue()+" "+v.getSymbolicValue());
+			SymbolicSolver ss = new SymbolicSolver(m);
+			result.methodNames.add(m.methodName);
+			result.testcases.add( ss.testcases );
 			
-			
-			//m.printPaths();
 		}
 	}
 

@@ -11,7 +11,7 @@ import java.io.File;
 import java.io.IOException;
 
 import inputCodeBeautifier.CodeBeautifier;
-import inputFileLoader.InputFileCopyMachine;
+import io.InputFileCopyMachine;
 
 public class Start extends Application{
 

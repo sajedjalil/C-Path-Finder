@@ -3,6 +3,7 @@ package symbolicSolver;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+
 import controlFlowGraphBuilder.Node;
 import parser.components.*;
 
@@ -10,7 +11,8 @@ public class SymbolicSolver {
 	
 	ArrayList <String> dataTypes = new ArrayList<String>( Arrays.asList("short", "long", "signed", "unsigned", "register",
 			"int", "float", "double", "char") );
-
+	
+	public ArrayList<String> testcases = new ArrayList<String>();
 	
 	public SymbolicSolver (Method m) {
 		
@@ -26,7 +28,7 @@ public class SymbolicSolver {
 		}
 		*/
 		for(int i=0; i<m.paths.size(); i++) {
-			System.out.println("Case: " + (i+1));
+			//System.out.println("Case: " + (i+1));
 			
 			analyzeSinglePath(i, m);
 			
@@ -71,8 +73,8 @@ public class SymbolicSolver {
 		
 		
 		//for(String s: solver.contidtions) System.out.println(s);
-		solver.analyze("");
-		
+		String testcase = solver.analyze();
+		testcases.add(testcase);
 		//if( solver.variableMap.containsKey("b"))
 			//System.out.println( solver.variableMap.get("b").getSymbolicValue());
 	}
