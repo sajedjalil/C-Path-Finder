@@ -19,12 +19,12 @@ public class SymbolicSolver {
 	
 	
 	private void analyzPaths(Method m) {
-		
+		/*
 		for(Node s: m.nodes) {
 			
 			 System.out.println(s.id+" "+s.content);
 		}
-		
+		*/
 		for(int i=0; i<m.paths.size(); i++) {
 			System.out.println("Case: " + (i+1));
 			
@@ -37,8 +37,8 @@ public class SymbolicSolver {
 	
 	private void analyzeSinglePath( int serial, Method m) {
 		
-		for(int i: m.paths.get(serial)) System.out.print(i+" ");
-		System.out.println();
+		//for(int i: m.paths.get(serial)) System.out.print(i+" ");
+		//System.out.println();
 		//if(serial > 4) return;
 		
 		
@@ -70,7 +70,7 @@ public class SymbolicSolver {
 		}
 		
 		
-		for(String s: solver.contidtions) System.out.println(s);
+		//for(String s: solver.contidtions) System.out.println(s);
 		solver.analyze("");
 		
 		//if( solver.variableMap.containsKey("b"))

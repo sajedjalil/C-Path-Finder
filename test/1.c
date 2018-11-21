@@ -24,7 +24,7 @@ int main()
     return 0;
 }
 
-int test(int number1, int number2)
+int test(float number1, float number2)
 {
     if (number1 >= number2)
     {

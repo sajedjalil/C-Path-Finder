@@ -18,11 +18,11 @@ public class CParser {
 		directorySearcher( file );
 	}
 	
-	
+	/*
 	public static void main(String[] args) {
 		new CParser(new File("results"));
 	}
-	
+	*/
 	
 	private void directorySearcher(File currentDirectory) {
 		
@@ -44,9 +44,6 @@ public class CParser {
 		
 		//System.out.println(file.getPath());
 		ObjectFile myFile = new ObjectFile(file);
-		
-		
-		
 		
 		//System.out.println(myFile.methods);
 	}
