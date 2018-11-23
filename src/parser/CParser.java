@@ -17,11 +17,20 @@ public class CParser {
 		
 		makeMainOutputDirectory();
 		
-		directorySearcher( file );
+		//directorySearcher( file );
 		
 		
 	}
 	
+	public CParser(ArrayList<String> changedFiles) {
+		
+		for(String s: changedFiles) {
+			
+			File file = new File(s);
+			ObjectFile ob = processSingleFile(file);
+			outputTestCase(ob);
+		}
+	}
 	
 	
 	private void makeMainOutputDirectory() {
@@ -40,7 +49,7 @@ public class CParser {
 		new CParser(new File("results"));
 	}
 	*/
-	
+	/*
 	private void directorySearcher(File currentDirectory) {
 		
 		for(File file: currentDirectory.listFiles()) {
@@ -57,7 +66,7 @@ public class CParser {
 			}
 		}
 	}
-	
+	*/
 	
 	private void outputTestCase(ObjectFile objectFile) {
 		
@@ -84,6 +93,10 @@ public class CParser {
 		}
 		
 		String fileName = objectFile.fileName.replace(".c", ".txt");
+		
+		File dir = new File(testCaseOutputDirectory);
+		dir.mkdirs();
+		
 		CustomFileWriter.writeAFile( new File(testCaseOutputDirectory+"\\"+fileName) , results);
 		
 	}

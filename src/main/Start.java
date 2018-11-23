@@ -9,7 +9,10 @@ import parser.CParser;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
 
+import database.DatabaseLoader;
 import inputCodeBeautifier.CodeBeautifier;
 import io.InputFileCopyMachine;
 
@@ -20,13 +23,27 @@ public class Start extends Application{
 	
 	
 	public static String inputPath; 
-	public static String outputPath = "results"; 
+	public static String outputPath = "results";
+	
+	private static DatabaseLoader dbloader = new DatabaseLoader();
+	public static int currentProjectId; 
 	
 	public static void main(String[] args) {
+		
+		loadNecessaryStuffs();
+		
+		//System.out.println("E:"+'\\'+"GitHub"+'\\'+"C-Path-Finder"+'\\'+"test");
+		//new DatabaseLoader();
 		launch(args);
 	}
 	
-	
+	private static void loadNecessaryStuffs() {
+		try {
+			Class.forName("org.sqlite.JDBC");
+		} catch (ClassNotFoundException e1) {
+			e1.printStackTrace();
+		}
+	}
 	
 	@Override
 	public void start(Stage primaryStage) throws IOException{
@@ -57,19 +74,34 @@ public class Start extends Application{
 		return null;
 	}
 	
-	public static void initialize() {
-		long startTime = System.nanoTime();
-		/** */
+	public static void run() {
+		
+		database();
+		
 		new InputFileCopyMachine(inputPath, outputPath);
 		
-		long endTime   = System.nanoTime();
-		System.out.println(endTime-startTime);
-		/** */
+		dbloader.directorySearcher( new File(outputPath) );
+		
 		new CodeBeautifier( new File(outputPath));
 		
-		endTime = System.nanoTime();
-		System.out.println(endTime-startTime);
 		
-		new CParser(new File(outputPath));
+		new CParser(dbloader.getChangedFiles());
+	}
+	
+	
+	private static void database() {
+		
+		dbloader.insertINtoProjectTable(inputPath);
+		currentProjectId = dbloader.getProjectId(inputPath);
+		//dbloader.ifFileToBeRun(new File("E:\\GitHub\\C-Path-Finder\\test\\1.c"), "Wed Nov 21 13:17:12 BDT 2018");
+		//dbloader.insertINtoFileTable("1.c", "results\\1.c", "Wed Nov 21 13:17:12 BDT 2018", "1");
+		//dbloader.insertINtoFileTable("2.c", "results\\2.c", "Wed Nov 21 13:17:12 BDT 2018", "1");
+		//dbloader.insertINtoFileTable("3.c", "results\\3.c", "Wed Nov 21 13:17:12 BDT 2018", "1");
+		dbloader.selectAllFile();
+		
+		//System.out.println( dbloader.getLastRunFromDB( new File("results\\1.c") ) );;
+		
+		
+		
 	}
 }

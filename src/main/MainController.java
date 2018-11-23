@@ -47,7 +47,7 @@ public class MainController {
 	@FXML
 	private void runFiles() {
 		
-		Start.initialize();
+		Start.run();
 		
 		runButton.setText("Re-Run");
 		
