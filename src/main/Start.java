@@ -9,8 +9,11 @@ import parser.CParser;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Comparator;
 
 import database.DatabaseLoader;
 import inputCodeBeautifier.CodeBeautifier;
@@ -74,18 +77,29 @@ public class Start extends Application{
 		return null;
 	}
 	
-	public static void run() {
+	public static void run(){
+		
+		dbloader.changedFiles = new ArrayList<String>();
 		
 		database();
 		
+		try {
+		Files.walk( Paths.get(outputPath) ).sorted(Comparator.reverseOrder())
+	    .map(Path::toFile)
+	    .forEach(File::delete);
+		}catch (IOException e) {
+			e.printStackTrace();
+		}
 		new InputFileCopyMachine(inputPath, outputPath);
 		
 		dbloader.directorySearcher( new File(outputPath) );
 		
 		new CodeBeautifier( new File(outputPath));
 		
+		dbloader.loadIntoFileTable();
 		
 		new CParser(dbloader.getChangedFiles());
+		dbloader.selectAllFile();
 	}
 	
 	
@@ -97,7 +111,7 @@ public class Start extends Application{
 		//dbloader.insertINtoFileTable("1.c", "results\\1.c", "Wed Nov 21 13:17:12 BDT 2018", "1");
 		//dbloader.insertINtoFileTable("2.c", "results\\2.c", "Wed Nov 21 13:17:12 BDT 2018", "1");
 		//dbloader.insertINtoFileTable("3.c", "results\\3.c", "Wed Nov 21 13:17:12 BDT 2018", "1");
-		dbloader.selectAllFile();
+		//dbloader.selectAllFile();
 		
 		//System.out.println( dbloader.getLastRunFromDB( new File("results\\1.c") ) );;
 		

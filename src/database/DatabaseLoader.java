@@ -3,6 +3,7 @@ package database;
 import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -13,6 +14,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 
+import main.Start;
+import parser.CParser;
+//-Djava.library.path=”z3\bin;${env_var:PATH}”
 public class DatabaseLoader {
 	
 	public static String defaultDatabaseDirectory = "C:\\sqlite\\db\\";
@@ -41,11 +45,7 @@ public class DatabaseLoader {
 		selectAllFile(); */
 	}
 	
-	
-	
-	
-	
-	
+		
 	
 	private void createFileTable() {
 		
@@ -54,6 +54,7 @@ public class DatabaseLoader {
                 + "	fileName text NOT NULL,\n"
                 + "	filePath text NOT NULL,\n"
                 + "	lastRun text NOT NULL,\n"
+                + "	outputPath text NOT NULL,\n"
                 + "	projectID integer,\n"
                 + " FOREIGN KEY (projectID)"
                 + "    REFERENCES project(id)"
@@ -72,7 +73,7 @@ public class DatabaseLoader {
 	}
 	
 	public void selectAllFile(){
-        String sql = "SELECT * FROM file";
+        String sql = "SELECT * FROM file where projectID='"+Start.currentProjectId+"'";
         
         try (Connection conn = this.connect();
              Statement stmt  = conn.createStatement();
@@ -84,6 +85,7 @@ public class DatabaseLoader {
                 				rs.getString("fileName") +  "\t" +
                 				rs.getString("filePath") +  "\t" +
                 				rs.getString("lastRun") +  "\t" +
+                				rs.getString("outputPath") +  "\t" +
                                 rs.getInt("projectID") + "\t");
             }
         } catch (SQLException e) {
@@ -92,13 +94,29 @@ public class DatabaseLoader {
     }
 	
 	public void insertINtoFileTable(String fileName, String filePath, 
-			String lastRun, String projectID) {
+			String lastRun, String projectID, String outputPath) {
 		
-		
+		String sql = "select filePath from file where filePath = '"+filePath+"'";
+		System.out.println(sql);
+		try (Connection conn = this.connect();
+	             Statement stmt  = conn.createStatement();
+	             ResultSet rs    = stmt.executeQuery(sql)){
+	           	
+	            while (rs.next()) {
+	            	//System.out.println(rs.getInt(""));
+	            	sql = "update file set lastRun = '"+lastRun+"', outputPath ='"+
+	            			outputPath+"' where filePath = '"+filePath+"'";
+	            	PreparedStatement pstmt = conn.prepareStatement(sql);
+	            	pstmt.executeUpdate();
+	            	return;
+	            }
+	    } catch (SQLException e) {
+	            System.out.println(e.getMessage());
+	    }
         
-        String sql = "INSERT INTO file (fileName, filePath, lastRun, projectID)\n" + 
+        sql = "INSERT INTO file (fileName, filePath, lastRun, projectID, outputPath)\n" + 
         		"VALUES ( '"+fileName+"', '"+filePath+"', '"+lastRun+"', '"
-        		+projectID+"' );";
+        		+projectID+"', '"+outputPath+"' );";
         
         try (Connection conn = this.connect();
             Statement stmt = conn.createStatement()) {
@@ -306,4 +324,17 @@ public class DatabaseLoader {
         return "";
     }
 	
+	
+	public void loadIntoFileTable() {
+		
+		Date currentTime = new Date();
+		System.out.println(currentTime.toString());
+		
+		for(String path: changedFiles) {
+			File file = new File(path);
+			insertINtoFileTable(file.getName(), file.getPath(),
+					currentTime.toString() , Integer.toString( Start.currentProjectId )
+					, CParser.testCaseOutputDirectory);
+		} 
+	}
 }
