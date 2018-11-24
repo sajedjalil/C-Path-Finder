@@ -1,4 +1,4 @@
-package inputCodeBeautifier;
+package codeBeautifier;
 
 import java.util.ArrayList;
 

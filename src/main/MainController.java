@@ -18,7 +18,7 @@ public class MainController {
 	@FXML Button openResultButton;
 	
 	@FXML Text openFilePath;
-	@FXML ProgressBar runProgress;
+	public @FXML ProgressBar runProgress;
 	@FXML Text resultDirectory;
 	
 	@FXML
@@ -47,8 +47,9 @@ public class MainController {
 	@FXML
 	private void runFiles() {
 		
+		runProgress.setProgress(0.0);
 		Start.run();
-		
+		runProgress.setProgress(1.0);
 		runButton.setText("Re-Run");
 		
 		openResultButton.setVisible(true);

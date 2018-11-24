@@ -1,4 +1,4 @@
-package inputCodeBeautifier;
+package codeBeautifier;
 
 import java.io.File;
 import java.io.IOException;

@@ -1,11 +1,8 @@
 /**
- * 
- */
-/**
  * @author Sajed Jalil
- * @mail bsse0714@iit.du.ac.bd
- * @university University of Dhaka
+ * @email bsse0714@iit.du.ac.bd
+ * @year 2018
+ * @location Dhaka
  * 
- *
  */
 package io;

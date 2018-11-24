@@ -15,8 +15,8 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Comparator;
 
+import codeBeautifier.CodeBeautifier;
 import database.DatabaseLoader;
-import inputCodeBeautifier.CodeBeautifier;
 import io.InputFileCopyMachine;
 
 public class Start extends Application{
@@ -35,8 +35,6 @@ public class Start extends Application{
 		
 		loadNecessaryStuffs();
 		
-		//System.out.println("E:"+'\\'+"GitHub"+'\\'+"C-Path-Finder"+'\\'+"test");
-		//new DatabaseLoader();
 		launch(args);
 	}
 	
@@ -83,23 +81,25 @@ public class Start extends Application{
 		
 		database();
 		
-		try {
-		Files.walk( Paths.get(outputPath) ).sorted(Comparator.reverseOrder())
-	    .map(Path::toFile)
-	    .forEach(File::delete);
-		}catch (IOException e) {
-			e.printStackTrace();
-		}
 		new InputFileCopyMachine(inputPath, outputPath);
 		
+		//for memorized execution
 		dbloader.directorySearcher( new File(outputPath) );
 		
 		new CodeBeautifier( new File(outputPath));
 		
 		dbloader.loadIntoFileTable();
-		
+	
 		new CParser(dbloader.getChangedFiles());
 		dbloader.selectAllFile();
+		
+		try {
+			Files.walk( Paths.get(outputPath) ).sorted(Comparator.reverseOrder())
+		    .map(Path::toFile)
+		    .forEach(File::delete);
+			}catch (IOException e) {
+				e.printStackTrace();
+		}
 	}
 	
 	

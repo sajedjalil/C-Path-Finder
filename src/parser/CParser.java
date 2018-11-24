@@ -23,7 +23,7 @@ public class CParser {
 	}
 	
 	public CParser(ArrayList<String> changedFiles) {
-		
+				
 		for(String s: changedFiles) {
 			
 			File file = new File(s);
