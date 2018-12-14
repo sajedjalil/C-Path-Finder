@@ -75,7 +75,7 @@ public class Start extends Application{
 		return null;
 	}
 	
-	public static void run(){
+	public static ArrayList<String> runInit(){
 		
 		dbloader.changedFiles = new ArrayList<String>();
 		
@@ -90,9 +90,10 @@ public class Start extends Application{
 		
 		dbloader.loadIntoFileTable();
 	
-		new CParser(dbloader.getChangedFiles());
-		dbloader.selectAllFile();
-		
+		return dbloader.getChangedFiles();
+	}
+	
+	public static void deleteTempFiles() {
 		try {
 			Files.walk( Paths.get(outputPath) ).sorted(Comparator.reverseOrder())
 		    .map(Path::toFile)
@@ -101,7 +102,6 @@ public class Start extends Application{
 				e.printStackTrace();
 		}
 	}
-	
 	
 	private static void database() {
 		

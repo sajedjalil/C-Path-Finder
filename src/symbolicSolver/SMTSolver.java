@@ -59,10 +59,9 @@ class SMTSolver {
 		
 		if( line.equals("")) return ""; //when nothing to generate
 		
-		BoolExpr t = makeConjunctionExpression(line);
-		Model model;
 		try {
-			model = check(ctx, t , Status.SATISFIABLE);
+			BoolExpr t = makeConjunctionExpression(line);
+			Model model = check(ctx, t , Status.SATISFIABLE);
 			
 			if(model != null ) return model.toString();
 			else return "Unsatisfiable";
@@ -71,7 +70,7 @@ class SMTSolver {
 			e.printStackTrace();
 		}
 		
-		return "Failed to Generate";
+		return "Parsing Error Occured";
 	}
 	
 	private String getCombineConditions() {
@@ -173,6 +172,13 @@ class SMTSolver {
 		else return null;
 	}
 	
+	private String minorParseFix(String line) {
+		
+		line = line.replaceAll("!", " !");
+		line = line.replaceAll("! +", "!");
+		
+		return line;
+	}
 	
 	private BoolExpr makeBooleanExpression( String line ) {
 		
@@ -180,7 +186,7 @@ class SMTSolver {
 		//System.out.println(line+"*");
 		line = removeOuterMostBracketContent(line.trim()); //remove excess outer brackets
 		//System.out.println(line);
-		
+		line = minorParseFix(line);
 		//System.out.println(line);
 		int counter = 0;
 		String sign = null;
@@ -212,19 +218,30 @@ class SMTSolver {
 		//System.out.println(first+ " " + second);
 		
 		
-		if( getExpressionType(line) == 1) { 
-			
-			ArithExpr temp1 = null, temp2 = null;
-			temp1 = makeArithmeticExpression( first.trim() );
-			temp2 = makeArithmeticExpression( second.trim() );
-			return returnBoolIntExpression(sign, temp1, temp2);
+		try {
+			if( getExpressionType(line) == 1) { 
+				
+				ArithExpr temp1 = null, temp2 = null;
+				temp1 = makeArithmeticExpression( first.trim() );
+				temp2 = makeArithmeticExpression( second.trim() );
+				
+				//System.out.println(temp1+ " " + temp2);
+				if( temp1 == null || temp2 == null ) return null;
+				return returnBoolIntExpression(sign, temp1, temp2);
+			}
+			else {
+				FPExpr temp1 = null, temp2 = null;
+				temp1 = makeFloatingExpression( first.trim() );
+				temp2 = makeFloatingExpression( second.trim() );
+				
+				//System.out.println(temp1+ " " + temp2);
+				if( temp1 == null || temp2 == null ) return null;
+				return returnBoolFloatExpression(sign, temp1, temp2);
+			}
+		} catch (Exception e) {
+			return null;
 		}
-		else {
-			FPExpr temp1 = null, temp2 = null;
-			temp1 = makeFloatingExpression( first.trim() );
-			temp2 = makeFloatingExpression( second.trim() );
-			return returnBoolFloatExpression(sign, temp1, temp2);
-		}
+		
 		
 		
 	}

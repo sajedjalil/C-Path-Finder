@@ -48,6 +48,8 @@ public class MethodParser {
 		int level = 0;
 		int lastFoundTarget = -3;
 		
+		//System.out.println(lines);
+		//System.out.println(lines.size());
 		for(int i=0; i<lines.size(); i++) {
 			
 			String words[] = lines.get(i).split(" +");

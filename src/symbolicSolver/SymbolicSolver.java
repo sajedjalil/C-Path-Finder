@@ -127,6 +127,7 @@ public class SymbolicSolver {
 	private void getUpdatedValue(String content, Variable v, SMTSolver solver) {
 		
 		if( !content.contains("=") ) return; // cases like: int a;
+		if( content.trim().split("=").length <2 ) return;
 		
 		String words[] = content.trim().split("=")[1].split(" +");
 		String temp = "";

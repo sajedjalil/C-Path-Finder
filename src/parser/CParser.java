@@ -22,14 +22,12 @@ public class CParser {
 		
 	}
 	
-	public CParser(ArrayList<String> changedFiles) {
+	public CParser(String changedFilePath) {
 				
-		for(String s: changedFiles) {
-			
-			File file = new File(s);
-			ObjectFile ob = processSingleFile(file);
-			outputTestCase(ob);
-		}
+		
+		File file = new File(changedFilePath);
+		ObjectFile ob = processSingleFile(file);
+		outputTestCase(ob);
 	}
 	
 	

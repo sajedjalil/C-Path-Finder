@@ -42,7 +42,9 @@ public class Variable {
 		
 		if( words.contains("=")) {
 			
+			System.out.println(line);
 			
+			if(line.split("=").length < 2) return;
 			String beforeEqualSign[] = line.split("=")[0].trim().split(" +");
 			String afterEqualSign = line.split("=")[1].trim();
 			
