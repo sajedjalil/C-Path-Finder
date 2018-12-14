@@ -20,15 +20,8 @@ public class InputFileCopyMachine {
 	
 	private void makeMainOutputDirectory(String destinationPath) {
 		
-		try {
-			
-			if( !Files.exists( Paths.get(destinationPath)) ) 
-				Files.createDirectory(Paths.get(destinationPath));
-			
-		} catch (IOException e) {
-			
-			e.printStackTrace();
-		}
+		File dir = new File(destinationPath);
+		dir.mkdirs();
 	}
 	
 	

@@ -5,10 +5,12 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.effect.Glow?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.MainController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" nodeOrientation="LEFT_TO_RIGHT" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.MainController">
    <children>
       <MenuBar AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <menus>
@@ -38,5 +40,13 @@
       <Text fx:id="status" layoutX="165.0" layoutY="213.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Status" visible="false" wrappingWidth="200.00000596046448" />
       <Button fx:id="openResultButton" layoutX="71.0" layoutY="228.0" mnemonicParsing="false" onAction="#openOutputDirectory" text="Open Result" textAlignment="CENTER" visible="false" />
       <Text fx:id="resultDirectory" layoutX="164.0" layoutY="245.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Result Directory" visible="false" wrappingWidth="200.00000596046448" />
+      <Text fx:id="copyright" layoutX="65.0" layoutY="390.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Copyright © 2018 Sajed Jalil. All Rights Reserved" textAlignment="CENTER" wrappingWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+         <font>
+            <Font size="11.0" />
+         </font>
+      </Text>
    </children>
+   <effect>
+      <Glow />
+   </effect>
 </AnchorPane>

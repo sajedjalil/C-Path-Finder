@@ -3,9 +3,9 @@ package main;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import parser.CParser;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,6 +14,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Comparator;
+
+import javax.swing.filechooser.FileSystemView;
 
 import codeBeautifier.CodeBeautifier;
 import database.DatabaseLoader;
@@ -26,7 +28,7 @@ public class Start extends Application{
 	
 	
 	public static String inputPath; 
-	public static String outputPath = "results";
+	public static String outputPath = "//C Path Finder//results";
 	
 	private static DatabaseLoader dbloader = new DatabaseLoader();
 	public static int currentProjectId; 
@@ -39,6 +41,12 @@ public class Start extends Application{
 	}
 	
 	private static void loadNecessaryStuffs() {
+		
+		String myDocuments = FileSystemView.getFileSystemView().getDefaultDirectory().getPath();
+		outputPath = myDocuments + outputPath;
+		
+		
+		
 		try {
 			Class.forName("org.sqlite.JDBC");
 		} catch (ClassNotFoundException e1) {
@@ -51,8 +59,8 @@ public class Start extends Application{
 		
 		Start.primaryStage = primaryStage;
 		Start.primaryStage.setTitle("C Path Finder");
-		
-		
+		Start.primaryStage.getIcons().add( new Image("file:resources//icon16.png") );
+	
 		showMainView();
 	}
 		

@@ -1,17 +1,18 @@
 package parser;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
+
+import javax.swing.filechooser.FileSystemView;
 
 import io.CustomFileWriter;
 import parser.components.*;
 
 public class CParser {
 	
-	public static String testCaseOutputDirectory = "testcases";
+	public static String testCaseOutputDirectory = 
+			FileSystemView.getFileSystemView().getDefaultDirectory().getPath()
+			+"//C Path Finder//testcases";
 	
 	public CParser(File file) {
 		
@@ -32,15 +33,9 @@ public class CParser {
 	
 	
 	private void makeMainOutputDirectory() {
-		try {
-			
-			if( !Files.exists( Paths.get(testCaseOutputDirectory)) ) 
-				Files.createDirectory(Paths.get(testCaseOutputDirectory));
-			
-		} catch (IOException e) {
-			
-			e.printStackTrace();
-		}
+		
+		File dir = new File(testCaseOutputDirectory);
+		dir.mkdirs();
 	}
 	/*
 	public static void main(String[] args) {

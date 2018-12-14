@@ -1,8 +1,14 @@
 package symbolicSolver;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.logging.FileHandler;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
+import javax.swing.filechooser.FileSystemView;
 
 import controlFlowGraphBuilder.Node;
 import parser.components.*;
@@ -13,20 +19,49 @@ public class SymbolicSolver {
 			"int", "float", "double", "char") );
 	
 	public ArrayList<String> testcases = new ArrayList<String>();
+	String myDocument = FileSystemView.getFileSystemView().getDefaultDirectory().getPath() + 
+			"//C Path Finder//logs//";
+	
+	Logger logger = Logger.getLogger("MyLog");  
+    FileHandler fh; 
 	
 	public SymbolicSolver (Method m) {
 		
+		init(m.methodName);
+		
+		//analyzing paths
 		analyzPaths(m);
 	}
 	
+	private void init(String name) {
+		
+		//setting the logger
+		File dir = new File(myDocument);
+		dir.mkdirs();
+		
+		logger.setUseParentHandlers(false);
+		try {   
+	        fh = new FileHandler(myDocument + name +".txt");  
+	        logger.addHandler(fh);
+	        SimpleFormatter formatter = new SimpleFormatter();  
+	        fh.setFormatter(formatter);  
+
+	    } catch (SecurityException e) {  
+	        e.printStackTrace();  
+	    } catch (IOException e) {  
+	        e.printStackTrace();  
+	    }		 
+	}
 	
 	private void analyzPaths(Method m) {
-		/*
+		
+		//log
+		String log = "";
 		for(Node s: m.nodes) {
-			
-			 System.out.println(s.id+" "+s.content);
+			log += (s.id+" "+s.content + "\n");
 		}
-		*/
+		logger.info(log);
+		
 		for(int i=0; i<m.paths.size(); i++) {
 			//System.out.println("Case: " + (i+1));
 			
@@ -38,6 +73,10 @@ public class SymbolicSolver {
 	
 	
 	private void analyzeSinglePath( int serial, Method m) {
+		
+		String log = "";
+		for(int i: m.paths.get(serial)) log += ( i + " ");
+		logger.info( log);
 		
 		//for(int i: m.paths.get(serial)) System.out.print(i+" ");
 		//System.out.println();

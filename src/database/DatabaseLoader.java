@@ -14,12 +14,15 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 
+import javax.swing.filechooser.FileSystemView;
+
 import main.Start;
 import parser.CParser;
 //-Djava.library.path=”z3\bin;${env_var:PATH}”
 public class DatabaseLoader {
 	
-	public static String defaultDatabaseDirectory = "C:\\sqlite\\db\\";
+	public static String defaultDatabaseDirectory = FileSystemView.getFileSystemView().getDefaultDirectory().getPath()
+			+"//C Path Finder//db//";
 	public static String databaseName = "cache.db";
 	
 	public ArrayList<String> changedFiles;

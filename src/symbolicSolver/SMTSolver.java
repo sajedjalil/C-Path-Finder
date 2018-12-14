@@ -67,7 +67,7 @@ class SMTSolver {
 			else return "Unsatisfiable";
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			
 		}
 		
 		return "Parsing Error Occured";
@@ -157,8 +157,15 @@ class SMTSolver {
 		for(int i=flag+1; i<words.length; i++) second += (words[i]+" ");
 		
 		//System.out.println(first+ " " + second);
-		temp1 = makeConjunctionExpression( first.trim() );
-		temp2 = makeConjunctionExpression( second.trim() );
+		try {
+			temp1 = makeConjunctionExpression( first.trim() );
+			temp2 = makeConjunctionExpression( second.trim() );
+		} catch (Exception e) {
+			return null;
+		}
+		finally {
+			
+		}
 		
 		return returnConjunctionExpression(sign, temp1, temp2);
 		

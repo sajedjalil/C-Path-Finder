@@ -28,6 +28,7 @@ public class MainController {
 	@FXML ProgressBar runProgress;
 	@FXML Text status;
 	@FXML Text resultDirectory;
+	@FXML Text copyright;
 	
 	@FXML
 	private void selectFiles() {
@@ -88,7 +89,7 @@ public class MainController {
         	                return "42";
         	            });
 
-        	            System.out.println(f.get(1, TimeUnit.SECONDS));
+        	            System.out.println(f.get(10, TimeUnit.SECONDS));
         	        } catch (final TimeoutException e) {
         	            System.err.println("Calculation took to long");
         	        } catch (final Exception e) {
