@@ -106,10 +106,10 @@ public class MainController {
                    
         		}
         		
-        		
+        		Platform.runLater(() -> runProgress.setProgress( 1.0 ));
         		status.setText("Done");
         		Start.deleteTempFiles();
-        		runButton.setText("Re-Run");
+        		Platform.runLater(() -> runButton.setText("Re-Run") );
         		
         		openResultButton.setVisible(true);
         		resultDirectory.setVisible(true);
