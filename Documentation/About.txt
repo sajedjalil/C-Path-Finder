@@ -7,6 +7,6 @@ Developer Mail: bsse0714@iit.du.ac.bd
 
 About
 
-C Path Finder is an automatic test cade generator for C projects. 
+C Path Finder is an automatic test case generator for C projects. 
 
 For more, please visit us at https://github.com/Sajed49/C-Path-Finder
